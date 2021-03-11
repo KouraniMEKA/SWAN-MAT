@@ -12,5 +12,6 @@ A script that plots results samples is included.
 # Prerequisites
 
 swan4101 (compatibility with future releases is not tested)
+
 MATLAB 2015a (or later)
 
