@@ -12,7 +12,22 @@ MATLAB/Simulink software v2015a or higher.
 
 # Sample results
 <p align="center">
-  <img src="https://github.com/KouraniMEKA/SWAN-MAT/blob/master/Sample%20Project/Outputs/Bathymetry.pdf">
+  <img src="https://github.com/KouraniMEKA/SWAN-MAT/blob/master/Sample%20Project/Outputs/Bathymetry.png">
+  <br />
+</p>
+
+<p align="center">
+  <img src="https://github.com/KouraniMEKA/SWAN-MAT/blob/master/Sample%20Project/Outputs/H_sig.png">
+  <br />
+</p>
+
+<p align="center">
+  <img src="https://github.com/KouraniMEKA/SWAN-MAT/blob/master/Sample%20Project/Outputs/Wave_Direction.png">
+  <br />
+</p>
+
+<p align="center">
+  <img src="https://github.com/KouraniMEKA/SWAN-MAT/blob/master/Sample%20Project/Outputs/Mean_Period.png">
   <br />
 </p>
 
