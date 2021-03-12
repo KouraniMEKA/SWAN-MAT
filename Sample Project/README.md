@@ -1,17 +1,23 @@
 # Sample Project
-A self contained simple project that generates required files using MATLAB to run a SWAN simulation.
-
+A self contained simple MATLAB project that generates required files run a SWAN simulation.<br />
 A script that plots results samples is included.
 
-# How to Use
-
-1- Use 'GenerateSWAN.m' to run the code.
-
-2- Use 'GenerateGraphs.m' to plot the results.
-
 # Prerequisites
+swan4101 (compatibility with future releases is not tested).<br \>
+MATLAB/Simulink software v2015a or higher.
 
-swan4101 (compatibility with future releases is not tested)
+# How to Use
+1. Use ["GenerateSWAN.m"](https://github.com/KouraniMEKA/SWAN-MAT/blob/master/Sample%20Project/GenerateSWAN.m) to run the code.<br \>
+2. Use ["GenerateGraphs.m"](https://github.com/KouraniMEKA/SWAN-MAT/blob/master/Sample%20Project/GenerateGraphs.m) to plot the results.
 
-MATLAB 2015a (or later)
+# Sample results
+<p align="center">
+  <img src="https://github.com/KouraniMEKA/SWAN-MAT/blob/master/Sample%20Project/Outputs/Bathymetry.pdf">
+  <br />
+</p>
 
+# Authors
+* **Ahmad Kourani** - *inital work* - [KouraniMEKA](https://github.com/KouraniMEKA). <br />
+
+# License
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/KouraniMEKA/Quadrotor-LQR/blob/master/LICENSE) file for details.
