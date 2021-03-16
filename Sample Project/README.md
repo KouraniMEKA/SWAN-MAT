@@ -12,22 +12,22 @@ MATLAB/Simulink software v2015a or higher.
 
 # Sample results
 <p align="center">
-  <img src="https://github.com/KouraniMEKA/SWAN-MAT/blob/master/Sample%20Project/Outputs/Bathymetry.png">
+  <img src="https://github.com/KouraniMEKA/SWAN-MAT/blob/master/Sample%20Project/Outputs/Bathymetry.png" width="400" height="400">
   <br />
 </p>
 
 <p align="center">
-  <img src="https://github.com/KouraniMEKA/SWAN-MAT/blob/master/Sample%20Project/Outputs/H_sig.png">
+  <img src="https://github.com/KouraniMEKA/SWAN-MAT/blob/master/Sample%20Project/Outputs/H_sig.png" width="400" height="400">
   <br />
 </p>
 
 <p align="center">
-  <img src="https://github.com/KouraniMEKA/SWAN-MAT/blob/master/Sample%20Project/Outputs/Wave_Direction.png">
+  <img src="https://github.com/KouraniMEKA/SWAN-MAT/blob/master/Sample%20Project/Outputs/Wave_Direction.png" width="400" height="400">
   <br />
 </p>
 
 <p align="center">
-  <img src="https://github.com/KouraniMEKA/SWAN-MAT/blob/master/Sample%20Project/Outputs/Mean_Period.png">
+  <img src="https://github.com/KouraniMEKA/SWAN-MAT/blob/master/Sample%20Project/Outputs/Mean_Period.png" width="400" height="400">
   <br />
 </p>
 
@@ -35,4 +35,4 @@ MATLAB/Simulink software v2015a or higher.
 * **Ahmad Kourani** - *inital work* - [KouraniMEKA](https://github.com/KouraniMEKA). <br />
 
 # License
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/KouraniMEKA/Quadrotor-LQR/blob/master/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/KouraniMEKA/SWAN-MAT/edit/master/Sample Project/LICENSE) file for details.
