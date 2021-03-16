@@ -35,4 +35,4 @@ MATLAB/Simulink software v2015a or higher.
 * **Ahmad Kourani** - *inital work* - [KouraniMEKA](https://github.com/KouraniMEKA). <br />
 
 # License
-This project is licensed under the MIT License - see the [LICENSE.md]('https://github.com/KouraniMEKA/SWAN-MAT/edit/master/Sample Project/LICENSE') file for details.
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/KouraniMEKA/SWAN-MAT/edit/master/Sample%20Project/LICENSE) file for details.
