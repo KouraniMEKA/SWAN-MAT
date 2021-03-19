@@ -1,0 +1,174 @@
+#####################################################################
+# SWAN+ADCIRC build manual for AUB remote cluster (193.188.131.20). #
+# by Ahmad Kourani, PhD student, Mechanical Engineering Department. #
+# Date: Feb 2017						    #
+#####################################################################
+
+# Before proceeding make sure that you have the intel fortran compiler, zlib and HDF5 installed, as well as the following files:
+1) netcdf-c-4.3.2.tar.gz
+2) netcdf-fortran-4.4.0.tar.gz
+
+#####################################################################
+# If you have admin root access you may include the intel compiler to PATH:
+$ nano .bashrc #edit PATH at terminal startup
+#add ifort to PATH
+
+$ source /home/ml14/intel/compilers_and_libraries_2017.1.132/linux/bin/compilervars.sh intel64
+
+# otherwise, you need to include this each time you run the terminal whenever needed (or create some bash file for that purpose ..)
+
+# check ifort availability
+$ which ifort 
+
+#####################################################################
+# test ifort: Compile and link a program
+
+# (you can skip this part if you know that the ifort compiler is fine)
+
+$ cd ~
+$ mkdir test
+$ cd test
+$ source /opt/intel/Compiler/11.1/056/bin/ifortvars.sh intel64
+
+# create a .f file:
+$ cat > hello.f
+# edit hello.f:
+$ vi hello.f
+#type 'i', copy paste this code, (respect the spacing):
+      program hello
+      print *,'Hello World!'
+      end program
+# click 'Esc', then type ':wq' to save and quit
+
+
+$ ifort -c hello.f # compile the file
+$ ifort -o hello hello.o
+$ ./hello
+
+# you should see the print of "Hello World!"
+
+#####################################################################
+# Build netCDF-C with netcdf4 support
+
+$ tar -zxvf netcdf-c-4.3.2.tar.gz
+$ cd netcdf-c-4.3.2
+$ export CPPFLAGS=-I/home/ml14/HDF5/include
+$ export LDFLAGS=-L/home/ml14/HDF5/lib
+
+$ ./configure --prefix=/home/ml14/netcdf/netcdf-c_4.3.2 
+$ make
+$ make check
+$ make install
+
+#####################################################################
+# Build NetCDF-F with netcdf4 support
+
+$ tar -zxvf netcdf-fortran-4.4.0.tar.gz
+$ cd netcdf-fortran-4.4.0
+$ export CPPFLAGS=-I/home/ml14/netcdf/netcdf-c_4.3.2/include
+$ export LDFLAGS='-L/home/ml14/netcdf/netcdf-c_4.3.2/lib -lnetcdf'
+
+$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ml14/netcdf/netcdf-c_4.3.2/lib
+
+$ ./configure --prefix=/home/ml14/netcdf/netcdf-fortran_4.4.0
+$ make
+$ make check
+$ make install
+
+#####################################################################
+# Add library paths to .bashrc file:
+
+$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ml14/zlib/lib
+$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ml14/HDF5/lib
+$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ml14/netcdf/netcdf-fortran_4.4.0/lib
+$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ml14/netcdf/netcdf-c_4.3.2/lib
+
+#####################################################################
+# Build adcirc
+
+# go to adcirc work directory
+# edit cmpflags.mk:
+
+$ vi cmplrflags.mk
+
+# Add the followings to the cmpflags.mk file in "work" directory:
+
+# type 'i' to edit, then add the following at the biginning of the file:
+
+compiler=intel
+FC=ifort
+PFC=mpif90
+I_MPI_F90=ifort
+SWAN=enable
+NETCDF=enable
+NETCDF4=enable
+
+NETCDF4_COMPRESSION=enable
+NETCDFHOME=/home/ml14/netcdf/netcdf-fortran_4.4.0
+HDF5HOME=/home/ml14/HDF5
+FLIBS := $(FLIBS) -L$(NETCDFHOME)/lib -lnetcdff -L/home/ml14/netcdf/netcdf-c_4.3.2/lib -lnetcdf -L$(HDF5HOME)/lib -lhdf5 -lhdf5_fortran
+
+# AMD compatibility: -xSSE4.2 flag should be chaged
+
+# Type 'Esc' to exit editing, then ':wq' and 'Enter' to save and exit the file.
+
+# Note: make sure that you define FLIBS correctly, and that its value is not overwitten by any following if-condition within the cmplrflags.mk file. Accutally a very small part of this file is required, and you may delete all irrelevant if-conditions to your system from this file to avoid possible errors.
+
+$ make adcirc
+
+#####################################################################
+# Build padcirc:
+
+# you will need to activate mpif90. 
+# mpif90 is just a wrapper, if you type: ~<mpif90-dir> -v you may see that COLLECT_GCC is set to gfortran, and you will then get an error if you try to compile padcirc. Export the following first:
+
+$ export I_MPI_F90=ifort
+
+# Now you can continue the make procedure:
+
+$ make parcirc
+
+#####################################################################
+# To test SWAN build:
+
+# go to the swan directory
+$ cd ../swan
+
+# In the swan directory:
+
+$ make punswan
+$ make clean
+$ make clobber
+
+#####################################################################
+# make padcswan and adcprep:
+
+# go back to the work directory
+$ cd ../work
+
+# In the work directory:
+
+$ make padcswan
+$ make adcprep
+
+#####################################################################
+# Additional excutables:
+
+$ make hstime
+$ make aswip
+
+# Note: "Another issue with the building of aswip is that it is built inside the same directory as adcirc, and both programs have a "main"
+program section inside them, creating a conflict. Therefore, in order to rebuild adcirc after aswip has been built, aswip its object
+file must be deleted first, to avoid a build error when adcirc is rebuilt."
+
+$ make clean 
+
+#####################################################################
+########################### Salawat!#################################
+#####################################################################
+
+#References:
+
+#http://www.mattbilskie.com/how-to-compile-swanadcirc-with-netcdf4-support/
+
+#https://www.webmo.net/support/ifort11.html
