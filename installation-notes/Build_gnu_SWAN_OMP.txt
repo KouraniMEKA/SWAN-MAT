@@ -1,0 +1,143 @@
+# swan4101 version
+
+#####################################################################
+# If you have admin root access you may include the intel compiler to PATH:
+#e dit PATH at terminal startup
+nano .bashrc 
+#add ifort to PATH
+
+source /home/ml14/intel/compilers_and_libraries_2017.1.132/linux/bin/compilervars.sh intel64
+
+# otherwise, you need to include this each time you run the terminal whenever needed (or create some bash file for that purpose ..)
+
+# check ifort availability
+which ifort 
+
+#####################################################################
+export CC=gcc
+export CXX=g++
+export FC=gfortran
+export F77=gfortran
+export F90=gfortran
+export PFC=mpif90
+export I_MPI_F90=mpif90
+
+#####################################################################
+##############################buid curl##############################
+#####################################################################
+
+#curl is available in /usr/bin/curl, no action required
+
+#####################################################################
+#############################build zlib##############################
+#####################################################################
+
+tar -zxvf zlib-1.2.10.tar.gz
+ZDIR=/home/ml14/WaveSimulation/Programs_gnu/zlib
+./configure --prefix=${ZDIR}
+make
+make check
+make install
+
+#####################################################################
+#############################Build HDF5##############################
+#####################################################################
+export CC=gcc
+export CXX=g++
+export FC=gfortran
+export F77=gfortran
+export F90=gfortran
+
+tar -xvf hdf5-1.8.18.tar
+H5DIR=/home/ml14/WaveSimulation/Programs_gnu/hdf5-1.8.18
+./configure --prefix=${H5DIR} --with-zlib=${ZDIR} --enable-fortran --enable-cxx
+
+make 
+make check
+make install
+
+###################################################################################
+#build hdf4
+
+tar -xvf hdf-4.2.12.tar
+
+export H4DIR=/home/ml14/WaveSimulation/Programs_gnu/hdf4-4.2.12
+./configure --enable-shared --disable-netcdf --disable-fortran --prefix=${H4DIR}
+make 
+make check 
+make install
+
+#####################################################################
+###############Buid netCDF C with hdf4 & DAP support#################
+#####################################################################
+
+tar -zxvf netcdf-c-4.3.2.tar.gz
+
+export CPPFLAGS="-I${H5DIR}/include -I${H4DIR}/include"
+export LDFLAGS="-L${H5DIR}/lib -L${H4DIR}/lib"
+export NCDIR=/home/ml14/WaveSimulation/Programs_gnu/netcdf-c-4.3.2
+
+./configure --enable-hdf4 --enable-hdf4-file-tests --prefix=${NCDIR}
+make
+make check
+make install
+#####################################################################
+#########################Buid netCDF fortran#########################
+#####################################################################
+
+tar -zxvf netcdf-fortran-4.4.0.tar.gz
+
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${NCDIR}/lib
+export NFDIR=/home/ml14/WaveSimulation/Programs_gnu/netcdf-f-4.4.0
+
+export CPPFLAGS=-I${NCDIR}/include 
+export LDFLAGS="-L${NCDIR}/lib  -lnetcdf"
+
+./configure --prefix=${NFDIR}
+make
+make check
+make install
+#####################################################################
+#################Add library paths to .bashrc file:##################
+#####################################################################
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ml14/WaveSimulation/Programs_gnu/zlib/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ml14/WaveSimulation/Programs_gun/HDF5/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ml14/WaveSimulation/Programs_gnu/netcdf-c-4.3.2/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ml14/WaveSimulation/Programs_gnu/netcdf-f-4.4.0/lib
+
+#####################################################################
+###################build SWAN with netCDF support####################
+#####################################################################
+
+tar -zxvf swan4101.tar.gz
+
+make config
+
+#add the following to macros.inc:
+NETCDFROOT=/home/ml14/WaveSimulation/Programs_gnu/netcdf-f-4.4.0
+#also edit the followings: 
+LIBS_OMP = -L$(NETCDFROOT)/lib -lnetcdff -L/home/ml14/WaveSimulation/Programs_gnu/netcdf-c-4.3.2/lib -lnetcdf -static-libgcc
+# set "F90_OMP = gfortran" 
+
+perl switch.pl -netcdf
+make omp
+
+chmod +rx ./swanrun
+chmod +rx ./swan.exe
+
+cp swan.exe swanrun swanrun.bat /home/ml14/WaveSimulation/SWAN_test
+#####################################################################
+##############################Run SWAN###############################
+#####################################################################
+
+./swanrun -input LebaneseAprRun -omp 16
+
+##
+FAILED!! NO NETCDF!!!!!!!!!!!!
+
+### NOTE!!
+netCDF is not working!
+Reinstall using earliest netcfd version, check lab laptop first
+if that does not work, reinstall everything using gfortran
+you can also include HDF4 and DAP support
